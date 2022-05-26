@@ -1,4 +1,3 @@
-import React from 'react';
 import './App.css';
 
 export const App = () => {
@@ -6,7 +5,7 @@ export const App = () => {
     <div className="App">
       <header className="App-header">
         <p>
-          HA Cluster Management
+          HA Cluster Management prototype
         </p>
       </header>
     </div>
