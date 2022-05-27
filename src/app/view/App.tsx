@@ -1,15 +1,13 @@
-import './App.css';
+import { Provider } from "react-redux";
 
-export const App = () => {
+import { setupStore } from "app/store";
+
+import { AppPage } from "./AppPage";
+
+export const App = ({ store = setupStore() }) => {
   return (
-    <div className="App">
-      <header className="App-header">
-        <p>
-          HA Cluster Management prototype
-        </p>
-      </header>
-    </div>
+    <Provider store={store}>
+      <AppPage />
+    </Provider>
   );
-}
-
-export default App;
+};
