@@ -23,14 +23,7 @@ module.exports = {
 
     "no-use-before-define": "off",
     "@typescript-eslint/no-use-before-define": "warn",
-    "no-unused-vars": [
-      "error",
-      {
-        argsIgnorePattern: "^(dummy|_)",
-        varsIgnorePattern: "^_",
-        ignoreRestSiblings: true,
-      },
-    ],
+    "no-unused-vars": "off",
     "@typescript-eslint/no-unused-vars": [
       "error",
       {
