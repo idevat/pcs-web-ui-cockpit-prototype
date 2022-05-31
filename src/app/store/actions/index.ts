@@ -8,6 +8,9 @@ type LeafActionMap = {
       sessionId: string;
     };
   };
+  FETCH_CLUSTER_LIST: {
+    type: "FETCH_CLUSTER_LIST";
+  };
 };
 
 export type ActionLeaf = LeafActionMap[keyof LeafActionMap];

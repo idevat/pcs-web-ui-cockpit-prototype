@@ -1,11 +1,21 @@
 import { all } from "redux-saga/effects";
 
-import { put, takeEvery } from "./common";
+import { importedClusterList } from "app/backend";
 
-function* rootSaga() {
-  yield all([takeEvery("SESSION_ID_LOAD", login)]);
+import { api, put, takeEvery } from "./common";
+
+function* fetchClusterList() {
+  const result: api.ResultOf<typeof importedClusterList> =
+    yield importedClusterList();
+  if (result.type !== "OK") {
+    console.log("FAIL:");
+    console.log(result);
+    return;
+  }
+
+  console.log("SUCCESS:");
+  console.log(result);
 }
-
 export function* login() {
   let response = "";
   yield global.cockpit
@@ -22,6 +32,13 @@ export function* login() {
       sessionId,
     },
   });
+}
+
+function* rootSaga() {
+  yield all([
+    takeEvery("SESSION_ID_LOAD", login),
+    takeEvery("FETCH_CLUSTER_LIST", fetchClusterList),
+  ]);
 }
 
 export { rootSaga };

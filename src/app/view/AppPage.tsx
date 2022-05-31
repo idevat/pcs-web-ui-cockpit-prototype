@@ -22,6 +22,17 @@ export const AppPage = () => {
       >
         Load session id
       </button>
+      {sessionId.length > 0 && (
+        <button
+          onClick={() =>
+            dispatch({
+              type: "FETCH_CLUSTER_LIST",
+            })
+          }
+        >
+          Load cluster list
+        </button>
+      )}
     </div>
   );
 };
