@@ -26,6 +26,8 @@ export function* login() {
 
   const { session_id: sessionId } = JSON.parse(response);
 
+  global.pcsdSid = sessionId;
+
   yield put({
     type: "SESSION_ID_LOAD.OK",
     payload: {

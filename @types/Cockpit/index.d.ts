@@ -5,7 +5,7 @@ type ProcessErr = {
   exit_signal?: string;
 };
 
-enum ProcessErrCodes {
+enum ErrCodes {
   "access-denied",
   "authentication-failed",
   "internal-error",
@@ -23,11 +23,40 @@ type ProcessPromise = {
   fail: (_cb: (_err: ProcessErr, _data?: string) => void) => ProcessPromise;
   stream: (_cb: (_data: string) => void) => ProcessPromise;
   input: (_data: string, _stream?: boolean) => ProcessPromise;
-  close: (_err?: ProcessErrCodes) => ProcessPromise;
+  close: (_err?: ErrCodes) => ProcessPromise;
+};
+
+type HttpOptions = {
+  address?: string;
+  tls?: {
+    validate?: boolean;
+  };
+};
+
+type HttpHeaders = Record<string, string>;
+
+type HttpOperations = {
+  close: (problem?: ErrCodes) => void;
+  get: (
+    path: string,
+    params: Record<string, string | string[]>,
+    headers: HttpHeaders
+  ) => HttpOperationsPromise;
+  post: (
+    path: string,
+    body: string | Record<string, string>,
+    headers: HttpHeaders
+  ) => HttpOperationsPromise;
+  request(options: HttpRequestOptions): HttpOperationsPromise;
 };
 
 type Cockpit = {
   spawn(_arguments: Array<string>, _parameters?: object): ProcessPromise;
+  transport: {
+    csrf_token: string;
+    wait: (_cb: () => void) => void;
+  };
+  http: (endpoint: string | number, options: HttpOptions) => HttpOperations;
 };
 
 // indicate that the file is a module
@@ -38,4 +67,6 @@ export {};
 declare global {
   /* eslint-disable-next-line  */
   var cockpit: Cockpit
+  /* eslint-disable-next-line  */
+  var pcsdSid: string
 }
