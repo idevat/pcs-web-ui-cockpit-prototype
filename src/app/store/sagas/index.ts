@@ -1,6 +1,7 @@
 import { all } from "redux-saga/effects";
 
-import { importedClusterList } from "app/backend";
+import { importedClusterList, rememberCluster } from "app/backend";
+import { ActionMap } from "app/store/actions";
 
 import { api, put, takeEvery } from "./common";
 
@@ -16,6 +17,24 @@ function* fetchClusterList() {
   console.log("SUCCESS:");
   console.log(result);
 }
+
+function* rememberClusterSaga({
+  payload: { clusterName, nodeNameList },
+}: ActionMap["REMEMBER_CLUSTER"]) {
+  const result: api.ResultOf<typeof rememberCluster> = yield rememberCluster({
+    clusterName,
+    nodeNameList,
+  });
+  if (result.type !== "OK") {
+    console.log("FAIL:");
+    console.log(result);
+    return;
+  }
+
+  console.log("SUCCESS:");
+  console.log(result);
+}
+
 export function* login() {
   let response = "";
   yield global.cockpit
@@ -40,6 +59,7 @@ function* rootSaga() {
   yield all([
     takeEvery("SESSION_ID_LOAD", login),
     takeEvery("FETCH_CLUSTER_LIST", fetchClusterList),
+    takeEvery("REMEMBER_CLUSTER", rememberClusterSaga),
   ]);
 }
 

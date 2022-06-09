@@ -23,15 +23,30 @@ export const AppPage = () => {
         Load session id
       </button>
       {sessionId.length > 0 && (
-        <button
-          onClick={() =>
-            dispatch({
-              type: "FETCH_CLUSTER_LIST",
-            })
-          }
-        >
-          Load cluster list
-        </button>
+        <>
+          <button
+            onClick={() =>
+              dispatch({
+                type: "FETCH_CLUSTER_LIST",
+              })
+            }
+          >
+            Load cluster list
+          </button>
+          <button
+            onClick={() =>
+              dispatch({
+                type: "REMEMBER_CLUSTER",
+                payload: {
+                  clusterName: "abc",
+                  nodeNameList: ["node1", "node2"],
+                },
+              })
+            }
+          >
+            Remember cluster
+          </button>
+        </>
       )}
     </div>
   );

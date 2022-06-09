@@ -11,6 +11,13 @@ type LeafActionMap = {
   FETCH_CLUSTER_LIST: {
     type: "FETCH_CLUSTER_LIST";
   };
+  REMEMBER_CLUSTER: {
+    type: "REMEMBER_CLUSTER";
+    payload: {
+      clusterName: string;
+      nodeNameList: string[];
+    };
+  };
 };
 
 export type ActionLeaf = LeafActionMap[keyof LeafActionMap];

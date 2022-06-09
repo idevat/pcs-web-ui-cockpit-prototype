@@ -16,6 +16,10 @@ type PayloadValidation<PAYLOAD, O, I> =
 
 type HttpParams = [string, string][];
 
+type PostData =
+  | { payload: Record<string, unknown> | string | [] | null }
+  | { params: HttpParams };
+
 type Output = "TEXT" | "PAYLOAD";
 
 type ValidationOpts<OUT extends Output, PAYLOAD, O, I> = [OUT] extends ["TEXT"]
@@ -50,6 +54,37 @@ const httpGet = async (url: string, params: HttpParams) => {
         Cookie: `pcsd.sid=${global.pcsdSid}`,
       },
     );
+    return {
+      status: 200,
+      statusText: "OK",
+      text: result,
+    };
+  } catch (e) {
+    const exception = e as { message: string; status: number; reason: string };
+    return {
+      status: exception.status,
+      statusText: exception.reason,
+      text: exception.message,
+    };
+  }
+};
+
+const httpPost = async (url: string, opts: PostData) => {
+  const headers = {
+    ...ajaxHeaders,
+    "Content-Type": `application/${
+      "params" in opts ? "x-www-form-urlencoded;charset=UTF-8" : "json"
+    }`,
+  };
+  const body =
+    "params" in opts ? httpParams(opts.params) : JSON.stringify(opts.payload);
+
+  // return fetch(url, { method: "post", headers, body });
+  try {
+    const result = await cockpitHttp.post(url, body, {
+      ...headers,
+      Cookie: `pcsd.sid=${global.pcsdSid}`,
+    });
     return {
       status: 200,
       statusText: "OK",
@@ -135,6 +170,21 @@ export async function get<PAYLOAD, O, I>(
 ) {
   return processHttpResponse(
     await httpGet(url, opts.params || []),
+    getValidationOpts(opts),
+  );
+}
+
+export async function post<PAYLOAD, O, I>(
+  url: string,
+  opts: (PostData & PayloadValidation<PAYLOAD, O, I>) | PostData = {
+    params: [],
+  },
+) {
+  return processHttpResponse(
+    await httpPost(
+      url,
+      "params" in opts ? { params: opts.params } : { payload: opts.payload },
+    ),
     getValidationOpts(opts),
   );
 }
