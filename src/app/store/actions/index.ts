@@ -18,6 +18,12 @@ type LeafActionMap = {
       nodeNameList: string[];
     };
   };
+  "AUTH.REQUIRED": {
+    type: "AUTH.REQUIRED";
+  };
+  "AUTH.SUCCESS": {
+    type: "AUTH.SUCCESS";
+  };
 };
 
 export type ActionLeaf = LeafActionMap[keyof LeafActionMap];

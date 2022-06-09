@@ -6,8 +6,9 @@ import { ActionMap } from "app/store/actions";
 import { api, put, takeEvery } from "./common";
 
 function* fetchClusterList() {
-  const result: api.ResultOf<typeof importedClusterList> =
-    yield importedClusterList();
+  const result: api.ResultOf<typeof importedClusterList> = yield api.authSafe(
+    importedClusterList,
+  );
   if (result.type !== "OK") {
     console.log("FAIL:");
     console.log(result);
@@ -21,10 +22,10 @@ function* fetchClusterList() {
 function* rememberClusterSaga({
   payload: { clusterName, nodeNameList },
 }: ActionMap["REMEMBER_CLUSTER"]) {
-  const result: api.ResultOf<typeof rememberCluster> = yield rememberCluster({
-    clusterName,
-    nodeNameList,
-  });
+  const result: api.ResultOf<typeof rememberCluster> = yield api.authSafe(
+    rememberCluster,
+    { clusterName, nodeNameList },
+  );
   if (result.type !== "OK") {
     console.log("FAIL:");
     console.log(result);
