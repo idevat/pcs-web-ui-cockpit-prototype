@@ -17,6 +17,12 @@ function* fetchClusterList() {
 
   console.log("SUCCESS:");
   console.log(result);
+  yield put({
+    type: "FETCH_CLUSTER_LIST.OK",
+    payload: {
+      clusterNameList: result.payload.cluster_list.map(c => c.name),
+    },
+  });
 }
 
 function* rememberClusterSaga({
@@ -47,18 +53,14 @@ export function* login() {
   const { session_id: sessionId } = JSON.parse(response);
 
   global.pcsdSid = sessionId;
+  console.log("load session id: success");
 
-  yield put({
-    type: "SESSION_ID_LOAD.OK",
-    payload: {
-      sessionId,
-    },
-  });
+  yield put({ type: "AUTH.SUCCESS" });
 }
 
 function* rootSaga() {
   yield all([
-    takeEvery("SESSION_ID_LOAD", login),
+    takeEvery("AUTH.REQUIRED", login),
     takeEvery("FETCH_CLUSTER_LIST", fetchClusterList),
     takeEvery("REMEMBER_CLUSTER", rememberClusterSaga),
   ]);

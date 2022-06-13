@@ -1,7 +1,4 @@
 type LeafActionMap = {
-  SESSION_ID_LOAD: {
-    type: "SESSION_ID_LOAD";
-  };
   "SESSION_ID_LOAD.OK": {
     type: "SESSION_ID_LOAD.OK";
     payload: {
@@ -10,6 +7,12 @@ type LeafActionMap = {
   };
   FETCH_CLUSTER_LIST: {
     type: "FETCH_CLUSTER_LIST";
+  };
+  "FETCH_CLUSTER_LIST.OK": {
+    type: "FETCH_CLUSTER_LIST.OK";
+    payload: {
+      clusterNameList: string[];
+    };
   };
   REMEMBER_CLUSTER: {
     type: "REMEMBER_CLUSTER";

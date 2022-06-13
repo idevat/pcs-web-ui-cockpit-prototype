@@ -1,53 +1,32 @@
+import React from "react";
 import { useSelector } from "react-redux";
 
 import { selectors } from "app/store";
 import { useDispatch } from "app/view/share/useDispatch";
 
 export const AppPage = () => {
-  const sessionId = useSelector(selectors.getSessionId);
   const dispatch = useDispatch();
+
+  const getClusterNameList = useSelector(selectors.getClusterNameList);
+
+  React.useEffect(() => {
+    dispatch({
+      type: "FETCH_CLUSTER_LIST",
+    });
+  }, [dispatch]);
+
   return (
     <div className="App">
       <header className="App-header">
         <p>HA Cluster Management prototype</p>
+        <div>
+          {getClusterNameList === undefined && <span>Loading...</span>}
+          {getClusterNameList !== undefined
+            && getClusterNameList.map((clusterName, i) => (
+              <div key={i}>{clusterName}</div>
+            ))}
+        </div>
       </header>
-      {sessionId.length > 0 && <div>{`Session: ${sessionId}`}</div>}
-      {sessionId.length === 0 && <div>No session</div>}
-      <button
-        onClick={() =>
-          dispatch({
-            type: "SESSION_ID_LOAD",
-          })
-        }
-      >
-        Load session id
-      </button>
-      {sessionId.length > 0 && (
-        <>
-          <button
-            onClick={() =>
-              dispatch({
-                type: "FETCH_CLUSTER_LIST",
-              })
-            }
-          >
-            Load cluster list
-          </button>
-          <button
-            onClick={() =>
-              dispatch({
-                type: "REMEMBER_CLUSTER",
-                payload: {
-                  clusterName: "abc",
-                  nodeNameList: ["node1", "node2"],
-                },
-              })
-            }
-          >
-            Remember cluster
-          </button>
-        </>
-      )}
     </div>
   );
 };

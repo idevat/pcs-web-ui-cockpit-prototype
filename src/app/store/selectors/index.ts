@@ -1,3 +1,4 @@
 import { Root } from "./types";
 
-export const getSessionId = (state: Root) => state.sessionId;
+export const getClusterNameList = (state: Root) =>
+  state.dashboard.clusterNameList;

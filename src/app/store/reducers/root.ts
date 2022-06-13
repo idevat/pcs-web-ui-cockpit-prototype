@@ -2,10 +2,22 @@ import { combineReducers } from "redux";
 
 import { AppReducer } from "app/store/reducers/appReducer";
 
-export const sessionId: AppReducer<string> = (state = "", action) => {
+const dashboardInitialState: {
+  clusterNameList: string[] | undefined;
+} = {
+  clusterNameList: undefined,
+};
+
+export const dashboard: AppReducer<typeof dashboardInitialState> = (
+  state = dashboardInitialState,
+  action,
+) => {
   switch (action.type) {
-    case "SESSION_ID_LOAD.OK":
-      return action.payload.sessionId;
+    case "FETCH_CLUSTER_LIST.OK":
+      return {
+        ...state,
+        clusterNameList: action.payload.clusterNameList,
+      };
 
     default:
       return state;
@@ -14,5 +26,5 @@ export const sessionId: AppReducer<string> = (state = "", action) => {
 
 export const root = () =>
   combineReducers({
-    sessionId,
+    dashboard,
   });
