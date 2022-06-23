@@ -50,7 +50,9 @@ export function* login() {
       response += data;
     });
 
-  const { session_id: sessionId } = JSON.parse(response);
+  const {
+    payload: { session_id: sessionId },
+  } = JSON.parse(response);
 
   global.pcsdSid = sessionId;
   console.log("load session id: success");
