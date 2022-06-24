@@ -8,6 +8,7 @@ export const AppPage = () => {
   const dispatch = useDispatch();
 
   const getClusterNameList = useSelector(selectors.getClusterNameList);
+  const authError = useSelector(selectors.authError);
 
   React.useEffect(() => {
     dispatch({
@@ -19,6 +20,24 @@ export const AppPage = () => {
     <div className="App">
       <header className="App-header">
         <p>HA Cluster Management prototype</p>
+      </header>
+      {authError && (
+        <div>
+          Authentication error happened.
+          <div>Code:{authError.code} </div>
+          <div>Message:{authError.message} </div>
+          <button
+            onClick={() =>
+              dispatch({
+                type: "AUTH.REQUIRED",
+              })
+            }
+          >
+            Try again
+          </button>
+        </div>
+      )}
+      {authError === undefined && (
         <div>
           {getClusterNameList === undefined && <span>Loading...</span>}
           {getClusterNameList !== undefined
@@ -26,7 +45,7 @@ export const AppPage = () => {
               <div key={i}>{clusterName}</div>
             ))}
         </div>
-      </header>
+      )}
     </div>
   );
 };

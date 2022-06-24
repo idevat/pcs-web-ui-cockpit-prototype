@@ -27,6 +27,13 @@ type LeafActionMap = {
   "AUTH.SUCCESS": {
     type: "AUTH.SUCCESS";
   };
+  "AUTH.FAILED": {
+    type: "AUTH.FAILED";
+    payload: {
+      code: string;
+      message: string;
+    };
+  };
 };
 
 export type ActionLeaf = LeafActionMap[keyof LeafActionMap];

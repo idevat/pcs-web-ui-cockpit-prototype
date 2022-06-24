@@ -43,21 +43,30 @@ function* rememberClusterSaga({
 }
 
 export function* login() {
-  let response = "";
+  let response_message = "";
   yield global.cockpit
     .spawn(["/home/user1/projects/pcs/pcs/pcs", "pcsd", "create-ui-session"])
     .stream((data: string) => {
-      response += data;
+      response_message += data;
     });
 
-  const {
-    payload: { session_id: sessionId },
-  } = JSON.parse(response);
+  // TODO deal with no-json response
+  // TODO deal with missing keys in json response
+  const response = JSON.parse(response_message);
 
-  global.pcsdSid = sessionId;
-  console.log("load session id: success");
+  if (response.result === "ok") {
+    const {
+      payload: { session_id: sessionId },
+    } = response;
+    global.pcsdSid = sessionId;
+    console.log("load session id: success");
 
-  yield put({ type: "AUTH.SUCCESS" });
+    yield put({ type: "AUTH.SUCCESS" });
+    return;
+  }
+
+  const { code, message } = response.payload;
+  yield put({ type: "AUTH.FAILED", payload: { code, message } });
 }
 
 function* rootSaga() {
