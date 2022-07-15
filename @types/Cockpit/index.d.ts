@@ -56,7 +56,7 @@ type Cockpit = {
     csrf_token: string;
     wait: (_cb: () => void) => void;
   };
-  http: (endpoint: string | number, options: HttpOptions) => HttpOperations;
+  http: (endpoint: string | number, options?: HttpOptions) => HttpOperations;
 };
 
 // indicate that the file is a module

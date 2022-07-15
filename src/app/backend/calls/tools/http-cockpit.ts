@@ -1,6 +1,1 @@
-export const cockpitHttp = cockpit.http(2224, {
-  address: "localhost",
-  tls: {
-    validate: false,
-  },
-});
+export const cockpitHttp = cockpit.http("/tmp/pcsd-unix.sock");
