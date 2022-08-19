@@ -2,6 +2,8 @@ import { combineReducers } from "redux";
 
 import { AppReducer } from "app/store/reducers/appReducer";
 
+import { login } from "./login";
+
 const dashboardInitialState: {
   clusterNameList: string[] | undefined;
 } = {
@@ -60,4 +62,5 @@ export const root = () =>
   combineReducers({
     auth,
     dashboard,
+    login,
   });

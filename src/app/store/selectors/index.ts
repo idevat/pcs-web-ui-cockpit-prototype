@@ -1,4 +1,5 @@
 import { Root } from "./types";
+export * from "./login";
 
 export const getClusterNameList = (state: Root) =>
   state.dashboard.clusterNameList;

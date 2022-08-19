@@ -10,6 +10,8 @@
 
 # production
 /build
+/build-standalone
+/build-cockpit
 
 # misc
 .DS_Store

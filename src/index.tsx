@@ -1,14 +1,15 @@
 import React from "react";
-import ReactDOM from "react-dom/client";
+import ReactDOM from "react-dom";
+import "@patternfly/react-core/dist/styles/base.css";
 
 import "./index.css";
 import { App } from "app/view";
 
 global.pcsdSid = "";
 
-const root = ReactDOM.createRoot(document.getElementById("root") as HTMLElement);
-root.render(
+ReactDOM.render(
   <React.StrictMode>
     <App />
   </React.StrictMode>,
+  document.getElementById("root") as HTMLElement,
 );

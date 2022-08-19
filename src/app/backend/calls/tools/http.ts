@@ -2,7 +2,7 @@ import * as t from "io-ts";
 
 import * as result from "./result";
 import * as validate from "./validate";
-import { cockpitHttp } from "./http-cockpit";
+import { httpLayer } from "./httpLayer";
 
 type CockpitResponse = {
   status: number;
@@ -41,33 +41,11 @@ const httpParams = (params: HttpParams): string =>
 
 const ajaxHeaders = { "X-Requested-With": "XMLHttpRequest" };
 
-const httpGet = async (url: string, params: HttpParams) => {
-  try {
-    const result = await cockpitHttp.get(
-      params.length > 0 ? `${url}?${httpParams(params)}` : url,
-      {
-        first: "abc",
-        second: ["one", "two"],
-      },
-      {
-        ...ajaxHeaders,
-        Cookie: `pcsd.sid=${global.pcsdSid}`,
-      },
-    );
-    return {
-      status: 200,
-      statusText: "OK",
-      text: result,
-    };
-  } catch (e) {
-    const exception = e as { message: string; status: number; reason: string };
-    return {
-      status: exception.status,
-      statusText: exception.reason,
-      text: exception.message,
-    };
-  }
-};
+const httpGet = async (url: string, params: HttpParams) =>
+  httpLayer.get(
+    params.length > 0 ? `${url}?${httpParams(params)}` : url,
+    ajaxHeaders,
+  );
 
 const httpPost = async (url: string, opts: PostData) => {
   const headers = {
@@ -79,25 +57,7 @@ const httpPost = async (url: string, opts: PostData) => {
   const body =
     "params" in opts ? httpParams(opts.params) : JSON.stringify(opts.payload);
 
-  // return fetch(url, { method: "post", headers, body });
-  try {
-    const result = await cockpitHttp.post(url, body, {
-      ...headers,
-      Cookie: `pcsd.sid=${global.pcsdSid}`,
-    });
-    return {
-      status: 200,
-      statusText: "OK",
-      text: result,
-    };
-  } catch (e) {
-    const exception = e as { message: string; status: number; reason: string };
-    return {
-      status: exception.status,
-      statusText: exception.reason,
-      text: exception.message,
-    };
-  }
+  return httpLayer.post(url, body, headers);
 };
 
 function validatePayload<PAYLOAD, O, I>(
@@ -114,6 +74,7 @@ async function processHttpResponse<OUT extends Output, PAYLOAD, O, I>(
   validationOpts?: ValidationOpts<OUT, PAYLOAD, O, I>,
 ): Promise<ApiResult<OUT, PAYLOAD>> {
   type AR = ApiResult<OUT, PAYLOAD>;
+  console.log("RESPONSE:", response);
   if (response.status === 401) {
     return { type: "UNAUTHORIZED" } as AR;
   }
@@ -168,6 +129,7 @@ export async function get<PAYLOAD, O, I>(
     | ({ params?: HttpParams } & PayloadValidation<PAYLOAD, O, I>)
     | { params?: HttpParams } = { params: [] },
 ) {
+  console.log("URL: ", url);
   return processHttpResponse(
     await httpGet(url, opts.params || []),
     getValidationOpts(opts),

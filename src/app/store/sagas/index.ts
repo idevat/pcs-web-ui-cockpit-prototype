@@ -1,9 +1,9 @@
 import { all } from "redux-saga/effects";
 
-import { importedClusterList, rememberCluster } from "app/backend";
+import { importedClusterList, login, rememberCluster } from "app/backend";
 import { ActionMap } from "app/store/actions";
 
-import { api, put, takeEvery } from "./common";
+import { api, call, put, takeEvery } from "./common";
 
 function* fetchClusterList() {
   const result: api.ResultOf<typeof importedClusterList> = yield api.authSafe(
@@ -42,7 +42,7 @@ function* rememberClusterSaga({
   console.log(result);
 }
 
-export function* login() {
+export function* loginAuthRequired() {
   // let response_message = "";
   // yield global.cockpit
   //   .spawn(["/home/user1/projects/pcs/pcs/pcs", "pcsd", "create-ui-session"])
@@ -72,11 +72,39 @@ export function* login() {
   yield put({ type: "AUTH.FAILED", payload: { code, message } });
 }
 
+export function* loginSaga({
+  payload: { username, password },
+}: ActionMap["LOGIN.ENTER_CREDENTIALS"]) {
+  console.log("GO CALL LOGIN");
+  const result: api.ResultOf<typeof login> = yield call(
+    login,
+    username,
+    password,
+  );
+  console.log("LOgin CALLED WITH RESULT", result);
+
+  if (result.type !== "OK") {
+    yield put({
+      type: "LOGIN.FAILED",
+      payload: {
+        badCredentials: result.type === "UNAUTHORIZED",
+        message:
+          result.type === "UNAUTHORIZED"
+            ? ""
+            : `Communication error: ${result.status}, ${result.text}`,
+      },
+    });
+    return;
+  }
+  yield put({ type: "AUTH.SUCCESS" });
+}
+
 function* rootSaga() {
   yield all([
-    takeEvery("AUTH.REQUIRED", login),
+    takeEvery("AUTH.REQUIRED", loginAuthRequired),
     takeEvery("FETCH_CLUSTER_LIST", fetchClusterList),
     takeEvery("REMEMBER_CLUSTER", rememberClusterSaga),
+    takeEvery("LOGIN.ENTER_CREDENTIALS", loginSaga),
   ]);
 }
 

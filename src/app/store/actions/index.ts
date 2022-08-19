@@ -1,3 +1,4 @@
+import { LoginActions } from "./login";
 type LeafActionMap = {
   "SESSION_ID_LOAD.OK": {
     type: "SESSION_ID_LOAD.OK";
@@ -34,7 +35,7 @@ type LeafActionMap = {
       message: string;
     };
   };
-};
+} & LoginActions;
 
 export type ActionLeaf = LeafActionMap[keyof LeafActionMap];
 
