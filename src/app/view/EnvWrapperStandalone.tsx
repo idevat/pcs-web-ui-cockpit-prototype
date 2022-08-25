@@ -1,4 +1,5 @@
 import React from "react";
+import { Page, PageHeader, PageSection } from "@patternfly/react-core";
 
 import { EnsureLogin } from "./login";
 
@@ -9,10 +10,9 @@ export const EnvWrapperStandalone = ({
 }) => {
   return (
     <EnsureLogin>
-      <div className="App">
-        <header className="App-header">Standalone masthead</header>
-        {children}
-      </div>
+      <Page header={<PageHeader logo="HA Cluster Management" />}>
+        <PageSection variant="light">{children}</PageSection>
+      </Page>
     </EnsureLogin>
   );
 };
