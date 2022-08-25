@@ -10,13 +10,13 @@ function* fetchClusterList() {
     importedClusterList,
   );
   if (result.type !== "OK") {
-    console.log("FAIL:");
-    console.log(result);
+    // console.log("FAIL:");
+    // console.log(result);
     return;
   }
 
-  console.log("SUCCESS:");
-  console.log(result);
+  // console.log("SUCCESS:");
+  // console.log(result);
   yield put({
     type: "FETCH_CLUSTER_LIST.OK",
     payload: {
@@ -33,13 +33,13 @@ function* rememberClusterSaga({
     { clusterName, nodeNameList },
   );
   if (result.type !== "OK") {
-    console.log("FAIL:");
-    console.log(result);
+    // console.log("FAIL:");
+    // console.log(result);
     return;
   }
 
-  console.log("SUCCESS:");
-  console.log(result);
+  // console.log("SUCCESS:");
+  // console.log(result);
 }
 
 export function* loginAuthRequired() {
@@ -75,13 +75,13 @@ export function* loginAuthRequired() {
 export function* loginSaga({
   payload: { username, password },
 }: ActionMap["LOGIN.ENTER_CREDENTIALS"]) {
-  console.log("GO CALL LOGIN");
+  // console.log("GO CALL LOGIN");
   const result: api.ResultOf<typeof login> = yield call(
     login,
     username,
     password,
   );
-  console.log("LOgin CALLED WITH RESULT", result);
+  // console.log("LOgin CALLED WITH RESULT", result);
 
   if (result.type !== "OK") {
     yield put({

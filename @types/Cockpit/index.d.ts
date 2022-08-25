@@ -57,6 +57,15 @@ type Cockpit = {
     wait: (_cb: () => void) => void;
   };
   http: (endpoint: string | number, options?: HttpOptions) => HttpOperations;
+  location: {
+    href: string;
+    path: string[];
+    options: Record<string, string | string[]>;
+    go: (path: string, opts?: Record<string, string | string[]>) => void;
+    replace: (path: string, opts?: Record<string, string | string[]>) => void;
+  };
+  addEventListener(type: string, handler: () => void);
+  removeEventListener(type: string, handler: () => void);
 };
 
 // indicate that the file is a module

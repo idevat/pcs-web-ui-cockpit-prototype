@@ -17,12 +17,9 @@ export function* authSafe<
   // https://github.com/microsoft/TypeScript/issues/32523
   // https://github.com/microsoft/TypeScript/issues/26959
   let response: RESULT = yield call<typeof fn>(fn, ...args);
-  console.log("RESPONSE TYPE", response.type);
   if (response.type === "UNAUTHORIZED") {
     // Ok, we got 401. So, ask for credentials and wait for login success...
-    console.log("PUT AUTH.REQUIRED");
     yield put({ type: "AUTH.REQUIRED" });
-    console.log("TAKING AUTH.SUCCESS");
     yield take("AUTH.SUCCESS");
     // ...and then second attempt.
     response = yield call(fn, ...args);

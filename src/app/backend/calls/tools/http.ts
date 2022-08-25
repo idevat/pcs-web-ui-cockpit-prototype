@@ -74,7 +74,6 @@ async function processHttpResponse<OUT extends Output, PAYLOAD, O, I>(
   validationOpts?: ValidationOpts<OUT, PAYLOAD, O, I>,
 ): Promise<ApiResult<OUT, PAYLOAD>> {
   type AR = ApiResult<OUT, PAYLOAD>;
-  console.log("RESPONSE:", response);
   if (response.status === 401) {
     return { type: "UNAUTHORIZED" } as AR;
   }
@@ -129,7 +128,6 @@ export async function get<PAYLOAD, O, I>(
     | ({ params?: HttpParams } & PayloadValidation<PAYLOAD, O, I>)
     | { params?: HttpParams } = { params: [] },
 ) {
-  console.log("URL: ", url);
   return processHttpResponse(
     await httpGet(url, opts.params || []),
     getValidationOpts(opts),
